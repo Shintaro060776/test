@@ -27,5 +27,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+<<<<<<< HEAD
+      run: terraform apply -auto-approve
+=======
+      run: terraform apply -auto-approve
+>>>>>>> 1dc222a30c02e8ec4435e59ed68e767dc9f64ad4
