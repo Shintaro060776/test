@@ -1,36 +1,41 @@
-name: 'Terraform GitHub Actions'
+name: 'Terraform'
+
 on:
   push:
-    paths:
-      - '**.tf'
-      - '**.tfvars'
+    branches:
+    - main
+  pull_request:
 
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
 
-      - name: Terraform Initialize
-        run: terraform init
+    - name: Terraform Init
+      run: terraform init
 
-      - name: Terraform Validate
-        run: terraform validate
+    - name: Terraform Format
+      run: terraform fmt -check
 
-      - name: Terraform Plan
-        run: terraform plan
+    - name: Terraform Plan
+      run: terraform plan
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-<<<<<<< HEAD
       run: terraform apply -auto-approve
-=======
-      run: terraform apply -auto-approve
->>>>>>> 1dc222a30c02e8ec4435e59ed68e767dc9f64ad4
