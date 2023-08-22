@@ -1,6 +1,6 @@
 resource "aws_security_group" "allow" {
   name        = "allow"
-  description = "Allow all traffic"
+  description = "Allow all traffic updated"
   vpc_id      = aws_vpc.main.id
 
   ingress {
