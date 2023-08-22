@@ -11,7 +11,7 @@ resource "aws_instance" "example" {
 
   vpc_security_group_ids = [aws_security_group.allow.id]
 
-  tags {
+  tags = {
     Name = "EC2_Test"
   }
 }
