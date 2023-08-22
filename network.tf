@@ -44,6 +44,6 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "example" {
-    instance = aws_instance.example.id
-    vpc = true
+  instance = aws_instance.example.id
+  vpc      = true
 }
