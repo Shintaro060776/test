@@ -18,7 +18,7 @@ resource "aws_instance" "example" {
   user_data = <<-EOF
     #!/bin/bash
     sudo yum update -y
-    sudo yum install -y nginx
+    sudo amazon-linux-extras install nginx1
     sudo systemctl start nginx
     sudo systemctl enable nginx
     echo "Hello from nginx" > /usr/share/nginx/html/index.html
