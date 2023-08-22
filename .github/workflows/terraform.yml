@@ -1,9 +1,6 @@
 name: 'Terraform Github Actions'
 on:
   push:
-    paths:
-      - '**.tf'
-      - '**.tfvars'
 
 jobs:
   terraform:
