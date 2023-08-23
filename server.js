@@ -4,9 +4,41 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const axios = require("axios");
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
+});
+
+app.get("/index.html", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
+app.get("/realchat.html", (req, res) => {
+    res.sendFile(__dirname + "/realchat.html");
+});
+
+app.get("/contact.html", (req, res) => {
+    res.sendFile(__dirname + "/contact.html");
+});
+
+app.post('/api/openai', async (req, res) => {
+    const prompt = req.body.prompt;
+
+    try {
+        // Flaskサーバーへのリクエスト転送
+        const response = await axios.post('http://localhost:5000/api/openai', {
+            prompt: prompt
+        });
+
+        res.json(response.data);
+
+    } catch (error) {
+        console.log("Error calling flask server", error.response.data);
+        res.status(500).json({ error: 'Failed to get a response from Flask server' });
+    }
 });
 
 io.on("connection", (socket) => {

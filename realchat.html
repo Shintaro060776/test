@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルチャットについて</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>リアルチャットについて</h1>
+        <p>リアルチャットは、リアルタイムでのコミュニケーションを提供するチャットアプリケーションです。</p>
+
+        <h2>特徴</h2>
+        <p>簡単な操作で、すぐにチャットを開始できます。リアルタイムでのメッセージの送受信により、スムーズなコミュニケーションを楽しむことができます。</p>
+
+        <h2>使い方</h2>
+        <p>メッセージ入力欄にテキストを入力し、送信ボタンをクリックするだけ。簡単にチャットを開始できます。</p>
+    </div>
+
+    <textarea id="userInput"></textarea>
+    <button id="sendToAPI">APIに送信</button>
+    <div id="apiResponse"></div>
+
+    <script>
+        document.getElementById("sendToAPI").addEventListener("click", function () {
+            const userInput = document.getElementById("userInput").value;
+
+            // Fetch APIを使用してバックエンドのエンドポイントにデータを送信
+            fetch("/api/openai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("apiResponse").textContent = data.response;
+                });
+        });
+    </script>
+</body>
+
+</html>

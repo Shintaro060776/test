@@ -11,8 +11,61 @@
                 Helvetica, Arial, sans-serif;
         }
 
+        h1 {
+            background-color: navy;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .hamburger-menu {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            /* 追加 */
+            top: 20px;
+            /* 追加: この値は調整して、ページの上端からの距離を変更できます */
+            right: 50px;
+            /* 追加: この値は調整して、ページの右端からの距離を変更できます */
+            cursor: pointer;
+        }
+
+        .line {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            position: absolute;
+            transition: all 0.3s;
+        }
+
+        .line1 {
+            top: 0;
+        }
+
+        .line2 {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .line3 {
+            bottom: 0;
+        }
+
+        .hamburger-menu.active .line1 {
+            transform: translateY(10px) rotate(45deg);
+        }
+
+        .hamburger-menu.active .line2 {
+            opacity: 0;
+        }
+
+        .hamburger-menu.active .line3 {
+            transform: translateY(-10px) rotate(-45deg);
+        }
+
         #form {
-            background: #181818dc;
+            background: #2406a8dc;
             padding: 0.25rem;
             position: fixed;
             bottom: 0;
@@ -36,7 +89,7 @@
         }
 
         #form>button {
-            background: #4e8357;
+            background: #944a04;
             border: none;
             padding: 0 1rem;
             margin: 0.25rem;
@@ -58,10 +111,79 @@
         #messages>li:nth-child(odd) {
             background: #efefef;
         }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s;
+            z-index: 10;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 5;
+        }
+
+        .menu-active .sidebar {
+            right: 0;
+        }
+
+        .menu-active .overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            color: #666;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
+    <h1>test</h1>
+    <div class="hamburger-menu">
+        <div class="line line1"></div>
+        <div class="line line2"></div>
+        <div class="line line3"></div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <li><a href="realchat.html">リアルチャットについて</a></li>
+            <li><a href="contact.html">問い合わせ先</a></li>
+        </ul>
+    </div>
+    <div class="overlay"></div>
+
     <ul id="messages"></ul>
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -88,6 +210,19 @@
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
+
+        document.querySelector(".hamburger-menu").addEventListener("click", function () {
+            this.classList.toggle("active");
+        });
+
+        document.querySelector(".hamburger-menu").addEventListener("click", function () {
+            this.classList.toggle("active");
+            document.body.classList.toggle("menu-active");
+        });
+
+        document.querySelector(".overlay").addEventListener("click", function () {
+            document.body.classList.remove("menu-active");
+        })
     </script>
 </body>
 

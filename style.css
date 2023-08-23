@@ -1,0 +1,66 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 8px;
+    margin-right: 16px;
+    width: 120px;
+    text-align: right;
+}
+
+input,
+textarea {
+    flex-grow: 1;
+    width: 100%;
+    /* 幅を100%に設定して、親要素に合わせます */
+    padding: 10px;
+    /* パディングを一貫して設定 */
+    border: 1px solid #ccc;
+    /* 境界線を一貫して設定 */
+    border-radius: 4px;
+    /* 角を少し丸めます */
+    margin-top: 5px;
+    /* 上側のマージンを設定 */
+    font-size: 16px;
+    /* テキストのサイズを調整 */
+    box-sizing: border-box;
+    /* ボーダーやパディングが幅や高さに含まれるように */
+}
+
+textarea {
+    resize: vertical;
+    /* 垂直方向のリサイズのみを許可 */
+}
+
+button.submit-button {
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+button.submit-button:hover {
+    background-color: #0056b3;
+}

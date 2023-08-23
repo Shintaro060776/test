@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>問い合わせ先</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>問い合わせ先</h1>
+
+        <form action="/submit" method="post" class="contact-form">
+            <div class="form-group">
+                <label for="name">お名前</label>
+                <input type="text" id="name" name="name" size="60" maxlength="255" required="required"
+                    aria-required="true" required>
+                <!-- <input data-drupal-selector="edit-name" class="form-text required form-control" type="text" id="edit-name" name="name" value="" > -->
+            </div>
+
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="email" id="email" name="email" size="60" maxlength="255" required="required"
+                    aria-required="true" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">メッセージ</label>
+                <textarea id="message" name="message" rows="10" size="300" maxlength="1000" required="required"
+                    aria-required="true" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-button">送信</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
