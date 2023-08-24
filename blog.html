@@ -117,21 +117,21 @@
     <div class="container">
         <button class="add-post-button">+</button>
         <h1>My Simple Blog</h1>
-        <div class="posts"></div>
+        <div class="post-container"></div>
 
-        <!-- ブログ記事1 -->
+        <!-- ブログ記事1
         <div class="post">
             <h2>First Post</h2>
             <p class="date">2023-08-25</p>
             <p>This is the content of the first post. You can write anything you want here.</p>
         </div>
 
-        <!-- ブログ記事2 -->
+        ブログ記事2 
         <div class="post">
             <h2>Second Post</h2>
             <p class="date">2023-08-26</p>
             <p>This is the content of the second post. Let's keep blogging!</p>
-        </div>
+        </div>  -->
 
     </div>
 
@@ -158,15 +158,19 @@
                 querySnapShot.forEach((doc) => {
                     const postData = doc.data();
                     const postHTML = `
-                <div class="post">
+                <div class="post" data-id="${doc.id}">
                 <h2>${postData.title}</h2>
                 <p class="date">${postData.date}</p>
                 <p>${postData.content}</p>
+                <button class="edit-post">編集</button>
+                <button class="delete-post">削除</button>
                 </div>
             `;
 
                     // document.querySelector('.container').innerHTML += postHTML;
-                    document.querySelector('.posts').innerHTML += postHTML;
+                    document.querySelector('.post-container').innerHTML += postHTML;
+                    attachPostEventListeners();
+                    attachDeletePostEventListeners();
                 });
             }).catch((error) => {
                 console.error('ブログの取得中にエラーが発生しました', error);
@@ -273,7 +277,7 @@
                       `;
 
                         // document.querySelector('.container').innerHTML += postHTML;
-                        document.querySelector('.posts').innerHTML += postHTML;
+                        document.querySelector('.post-container').innerHTML += postHTML;
                     })
                     .catch((error) => {
                         console.error("ブログの保存中にエラーが発生しました:", error);
@@ -282,6 +286,48 @@
                 alert('タイトルと内容を入力してください');
             }
         });
+
+        function attachPostEventListeners() {
+            document.querySelectorAll('.edit-post').forEach(button => {
+                button.addEventListener('click', function () {
+                    const postDiv = this.closest('.post');
+                    const postId = postDiv.getAttribute('data-id');
+                    // ここに編集機能を実装
+                    const currentTitle = postDiv.querySelector('h2').textContent;
+                    const currentContent = postDiv.querySelector('p:not(.date)').textContent;
+
+                    const newTitle = prompt("新しいタイトルを入力してください:", currentTitle);
+                    const newContent = prompt("新しい内容を入力してください:", currentContent);
+
+                    if (newTitle && newContent) {
+                        db.collection('post').doc(postId).update({
+                            title: newTitle,
+                            content: newContent
+                        }).then(() => {
+                            postDiv.querySelector('h2').textContent = newTitle;
+                            postDiv.querySelector('p:not(.date)').textContent = newContent;
+                            alert("ブログ記事を更新しました。");
+                        }).catch((error) => {
+                            console.error("ブログの更新中にエラーが発生しました:", error);
+                        });
+                    }
+                });
+            });
+        }
+
+        function attachDeletePostEventListeners() {
+            document.querySelectorAll('.delete-post').forEach(button => {
+                button.addEventListener('click', function () {
+                    const postDiv = this.closest('.post');
+                    const postId = postDiv.getAttribute('data-id');
+                    db.collection('post').doc(postId).delete().then(() => {
+                        postDiv.remove();
+                    }).catch((error) => {
+                        console.error("ブログの削除中にエラーが発生しました:", error);
+                    });
+                });
+            });
+        }
 
     </script>
 </body>
