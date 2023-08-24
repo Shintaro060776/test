@@ -64,3 +64,18 @@ button.submit-button {
 button.submit-button:hover {
     background-color: #0056b3;
 }
+
+.navbar button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar button:hover {
+    background-color: white;
+    color: #333;
+}

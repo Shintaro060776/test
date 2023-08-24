@@ -68,6 +68,22 @@
             font-style: italic;
             color: gray;
         }
+
+
+        .navbar button {
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 20px;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.5s;
+        }
+
+        .navbar button:hover {
+            background-color: rgb(228, 224, 18);
+            color: #333;
+        }
     </style>
 
 </head>
@@ -76,7 +92,7 @@
 
     <div class="navbar">
         <div>My Blog</div>
-        <a href="login.html" class="login-button">ログイン</a>
+        <button class="login-button">ログイン</button>
     </div>
 
     <div class="container">
@@ -113,16 +129,52 @@
         // Firebaseの初期化
         firebase.initializeApp(firebaseConfig);
 
+        document.addEventListener('DOMContentLoaded', function () {
+            let loginTime = localStorage.getItem('loginTime');
+            if (loginTime) {
+                let currentTime = new Date().getTime();
+                let oneDay = 24 * 60 * 60 * 1000;
+
+                if (currentTime - loginTime > oneDay) {
+                    firebase.auth().signOut().then(() => {
+                        localStorage.removeItem('loginTime');
+                    }).catch((error) => {
+                        console.error('ログアウトエラー:', error);
+                    });
+                }
+            }
+        });
+
         let loginButton = document.querySelector('.login-button');
 
-        loginButton.addEventListener('click', function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                loginButton.textContent = 'ログイン済み';
+                // オプション: ログイン済みの場合、ボタンのリンクを削除または変更する
+                // loginButton.removeAttribute('href');
+                loginButton.disabled = true;
+            } else {
+                loginButton.textContent = 'ログイン';
+                loginButton.disabled = false;
+            }
+        });
+
+        loginButton.addEventListener('click', function (event) {
+            // ページ遷移を防止
+            event.preventDefault();
+
             var email = prompt('Email');
             var password = prompt('Password');
 
-            firebase.auth().signInWithEmailAndPassword(email, password)
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .then(function () {
+                    return firebase.auth().signInWithEmailAndPassword(email, password);
+                })
                 .then((userCredential) => {
                     var user = userCredential.user;
                     alert('ログイン成功');
+                    let loginDate = new Date().getTime();
+                    localStorage.setItem('loginTime', loginDate);
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -130,31 +182,7 @@
                     alert('エラー:' + errorMessage);
                 });
         });
-
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                loginButton.textContent = 'ログイン済み';
-            } else {
-                loginButton.textContent = 'ログイン';
-            }
-        });
-
-        // document.querySelector('.login-button').addEventListener('click', function () {
-        //     var email = prompt('Email');
-        //     var password = prompt('Password');
-
-    //         firebase.auth().signInWithEmailAndPassword(email, password)
-    //             .then((userCredential) => {
-    //                 var user = userCredential.user;
-    //                 alert('ログイン成功');
-    //             })
-    //             .catch((error) => {
-    //                 var errorCode = error.code;
-    //                 var errorMessage = error.message;
-    //                 alert('エラー:' + errorMessage);
-    //             });
-    //     });
-    // </script>
+    </script>
 </body>
 
 </html>
