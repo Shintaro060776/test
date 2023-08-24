@@ -84,6 +84,24 @@
             background-color: rgb(228, 224, 18);
             color: #333;
         }
+
+        .add-post-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 10px auto;
+            transition: background-color 0.3s;
+        }
+
+        .add-post-button:hover {
+            background-color: #555;
+        }
     </style>
 
 </head>
@@ -97,6 +115,7 @@
     </div>
 
     <div class="container">
+        <button class="add-post-button">+</button>
         <h1>My Simple Blog</h1>
 
         <!-- ブログ記事1 -->
@@ -117,6 +136,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
     <script>
         // Firebaseの設定
         var firebaseConfig = {
@@ -202,6 +222,77 @@
                     alert('エラー:' + errorMessage);
                 });
         });
+
+        let addPostButton = document.querySelector('.add-post-button');
+
+        // addPostButton.addEventListener('click', function () {
+        //     let postTitle = prompt('ブログのタイトルを入力してください');
+        //     let postContent = prompt('ブログの内容を入力してください');
+
+        //     if (postTitle && postContent) {
+        //         console.log('タイトル:', postTitle);
+        //         console.log('内容:', postContent);
+
+        //         let postHTML = `
+        //             <div class="post">
+        //                 <h2>${postTitle}</h2>
+        //                 <p class="date">${new Date().toISOString().split('T')[0]}</p>
+        //                 <p>${postContent}</p>
+        //             </div>
+        //         `;
+        //         document.querySelector('.container').innerHTML += postHTML;
+        //     } else {
+        //         alert('タイトルと内容を入力してください');
+        //     }
+        // });
+
+        const db = firebase.firestore();
+
+        function savePostToFirestore(title, date, content) {
+            return db.collection('post').add({
+                title: title,
+                date: date,
+                content: content
+            });
+        }
+
+
+
+        // function savePostToFirestore(title, date, content) {
+        //     return db.collection('posts').add({
+        //         title: title,
+        //         date: date,
+        //         content: content
+        //     });
+        // }
+
+        document.querySelector('.add-post-button').addEventListener('click', function () {
+            const title = prompt("タイトルを入力してください:");
+            const content = prompt("内容を入力してください:");
+            const date = new Date().toISOString().split("T")[0];  // 現在の日付を取得
+
+            if (title && content) {
+                savePostToFirestore(title, date, content)
+                    .then((docRef) => {
+                        console.log("ブログが保存されました:", docRef.id);
+                        const postHTML = `
+                     <div class="post">
+                       <h2>${title}</h2>
+                      <p class="date">${date}</p>
+                      <p>${content}</p>
+                     </div>
+                      `;
+
+                        document.querySelector('.container').innerHTML += postHTML;
+                    })
+                    .catch((error) => {
+                        console.error("ブログの保存中にエラーが発生しました:", error);
+                    });
+            } else {
+                alert('タイトルと内容を入力してください');
+            }
+        });
+
     </script>
 </body>
 
