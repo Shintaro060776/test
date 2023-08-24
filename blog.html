@@ -117,6 +117,7 @@
     <div class="container">
         <button class="add-post-button">+</button>
         <h1>My Simple Blog</h1>
+        <div class="posts"></div>
 
         <!-- ブログ記事1 -->
         <div class="post">
@@ -150,7 +151,30 @@
         // Firebaseの初期化
         firebase.initializeApp(firebaseConfig);
 
+        const db = firebase.firestore();
+
+        function fetchAndDisplayPosts() {
+            db.collection('post').get().then((querySnapShot) => {
+                querySnapShot.forEach((doc) => {
+                    const postData = doc.data();
+                    const postHTML = `
+                <div class="post">
+                <h2>${postData.title}</h2>
+                <p class="date">${postData.date}</p>
+                <p>${postData.content}</p>
+                </div>
+            `;
+
+                    // document.querySelector('.container').innerHTML += postHTML;
+                    document.querySelector('.posts').innerHTML += postHTML;
+                });
+            }).catch((error) => {
+                console.error('ブログの取得中にエラーが発生しました', error);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            fetchAndDisplayPosts();
             let loginTime = localStorage.getItem('loginTime');
             if (loginTime) {
                 let currentTime = new Date().getTime();
@@ -167,6 +191,8 @@
         });
 
         let loginButton = document.querySelector('.login-button');
+        let registerButton = document.querySelector('.register-button');
+        let addPostButton = document.querySelector('.add-post-button');
 
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -204,8 +230,6 @@
                 });
         });
 
-        let registerButton = document.querySelector('.register-button');
-
         registerButton.addEventListener('click', function (e) {
             e.preventDefault();
 
@@ -223,31 +247,6 @@
                 });
         });
 
-        let addPostButton = document.querySelector('.add-post-button');
-
-        // addPostButton.addEventListener('click', function () {
-        //     let postTitle = prompt('ブログのタイトルを入力してください');
-        //     let postContent = prompt('ブログの内容を入力してください');
-
-        //     if (postTitle && postContent) {
-        //         console.log('タイトル:', postTitle);
-        //         console.log('内容:', postContent);
-
-        //         let postHTML = `
-        //             <div class="post">
-        //                 <h2>${postTitle}</h2>
-        //                 <p class="date">${new Date().toISOString().split('T')[0]}</p>
-        //                 <p>${postContent}</p>
-        //             </div>
-        //         `;
-        //         document.querySelector('.container').innerHTML += postHTML;
-        //     } else {
-        //         alert('タイトルと内容を入力してください');
-        //     }
-        // });
-
-        const db = firebase.firestore();
-
         function savePostToFirestore(title, date, content) {
             return db.collection('post').add({
                 title: title,
@@ -255,16 +254,6 @@
                 content: content
             });
         }
-
-
-
-        // function savePostToFirestore(title, date, content) {
-        //     return db.collection('posts').add({
-        //         title: title,
-        //         date: date,
-        //         content: content
-        //     });
-        // }
 
         document.querySelector('.add-post-button').addEventListener('click', function () {
             const title = prompt("タイトルを入力してください:");
@@ -283,7 +272,8 @@
                      </div>
                       `;
 
-                        document.querySelector('.container').innerHTML += postHTML;
+                        // document.querySelector('.container').innerHTML += postHTML;
+                        document.querySelector('.posts').innerHTML += postHTML;
                     })
                     .catch((error) => {
                         console.error("ブログの保存中にエラーが発生しました:", error);
