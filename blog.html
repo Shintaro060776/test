@@ -91,8 +91,9 @@
 <body>
 
     <div class="navbar">
-        <div>My Blog</div>
+        <div><a href="index.html">My Blog</a></div>
         <button class="login-button">ログイン</button>
+        <button class="register-button">ユーザ登録</button>
     </div>
 
     <div class="container">
@@ -175,6 +176,25 @@
                     alert('ログイン成功');
                     let loginDate = new Date().getTime();
                     localStorage.setItem('loginTime', loginDate);
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    alert('エラー:' + errorMessage);
+                });
+        });
+
+        let registerButton = document.querySelector('.register-button');
+
+        registerButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            let email = prompt('新規登録のメールアドレスを入力してください');
+            let password = prompt('パスワードを入力してください');
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert('ユーザー登録に成功しました');
                 })
                 .catch((error) => {
                     var errorCode = error.code;
