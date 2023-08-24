@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Blog</title>
+    <style>
+        /* CSSの部分 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .post {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        .date {
+            font-style: italic;
+            color: gray;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div>My Blog</div>
+        <a href="login.html" class="login-button">ログイン</a>
+    </div>
+
+    <div class="container">
+        <h1>My Simple Blog</h1>
+
+        <!-- ブログ記事1 -->
+        <div class="post">
+            <h2>First Post</h2>
+            <p class="date">2023-08-25</p>
+            <p>This is the content of the first post. You can write anything you want here.</p>
+        </div>
+
+        <!-- ブログ記事2 -->
+        <div class="post">
+            <h2>Second Post</h2>
+            <p class="date">2023-08-26</p>
+            <p>This is the content of the second post. Let's keep blogging!</p>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script>
+        // Firebaseの設定
+        var firebaseConfig = {
+            apiKey: "AIzaSyCSA-leHE5_-wMyYxt1b7yRZrN3wk5gz4k",
+            authDomain: "auth-3b191.firebaseapp.com",
+            projectId: "auth-3b191",
+            storageBucket: "auth-3b191.appspot.com",
+            messagingSenderId: "802101806601",
+            appId: "1:802101806601:web:06409e97f5fd8bc0e09ad8"
+        };
+        // Firebaseの初期化
+        firebase.initializeApp(firebaseConfig);
+
+        let loginButton = document.querySelector('.login-button');
+
+        loginButton.addEventListener('click', function () {
+            var email = prompt('Email');
+            var password = prompt('Password');
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+                    alert('ログイン成功');
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    alert('エラー:' + errorMessage);
+                });
+        });
+
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                loginButton.textContent = 'ログイン済み';
+            } else {
+                loginButton.textContent = 'ログイン';
+            }
+        });
+
+        // document.querySelector('.login-button').addEventListener('click', function () {
+        //     var email = prompt('Email');
+        //     var password = prompt('Password');
+
+    //         firebase.auth().signInWithEmailAndPassword(email, password)
+    //             .then((userCredential) => {
+    //                 var user = userCredential.user;
+    //                 alert('ログイン成功');
+    //             })
+    //             .catch((error) => {
+    //                 var errorCode = error.code;
+    //                 var errorMessage = error.message;
+    //                 alert('エラー:' + errorMessage);
+    //             });
+    //     });
+    // </script>
+</body>
+
+</html>

@@ -20,8 +20,24 @@ app.get("/realchat.html", (req, res) => {
     res.sendFile(__dirname + "/realchat.html");
 });
 
+app.get("/login.html", (req, res) => {
+    res.sendFile(__dirname + "/login.html");
+});
+
+app.get("/blog.html", (req, res) => {
+    res.sendFile(__dirname + "/blog.html");
+});
+
 app.get("/contact.html", (req, res) => {
     res.sendFile(__dirname + "/contact.html");
+});
+
+app.post('/submit', (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const message = req.body.message;
+
+    res.send('Thank you for your message');
 });
 
 app.post('/api/openai', async (req, res) => {
